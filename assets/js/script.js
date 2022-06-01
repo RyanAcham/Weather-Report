@@ -6,6 +6,21 @@ var date = moment().format('dddd, MMMM Do YYYY');
 var dateTime = moment().format('YYYY-MM-DD HH:MM:SS')
 //to do: button creator 
 var cityHist = [];
+
+//to do: save text as array on search click
+$('.search').on("click", function (event) {
+	event.preventDefault();
+	city = $(this).parent('.btnPar').siblings('.textIn').val().trim();
+	if (city === "") {
+		return;
+	};
+	cityHist.push(city);
+
+	localStorage.setItem('city', JSON.stringify(cityHist));
+	forecast.empty();
+	getHis();
+	getWeath();
+});
 var hist = $('.citHit');
 function getHis() {
     hist.empty();
@@ -150,22 +165,14 @@ function forecast(){
 	});
 }
 
-//to do: save text as array on search click
-$('.search').on("click", function (event) {
-	event.preventDefault();
-	city = $(this).parent('.btnPar').siblings('.textIn').val().trim();
-	if (city === "") {
-		return;
-	};
-	cityHist.push(city);
-
-	localStorage.setItem('city', JSON.stringify(cityHist));
-	forecast.empty();
-	getHis();
-	getWeath();
-});
 //to do: function for first data that the user sees when the website loads
 function initCast(){
-    
+    var cityCreate = JSON.parse(localStorage.getItem('city'));
+
+	if (cityCreate !== null) {
+		cityHist = cityCreate
+	}
+	getHis();
+	getWeath();
 }
 initCast();
