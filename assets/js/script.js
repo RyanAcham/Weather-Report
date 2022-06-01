@@ -17,7 +17,7 @@ $('.search').on("click", function (event) {
 	cityHist.push(city);
 
 	localStorage.setItem('city', JSON.stringify(cityHist));
-	forecast.empty();
+	forcastVal.empty();
 	getHis();
 	getWeath();
 });
@@ -136,7 +136,7 @@ function forecast(){
 			var divElCard = $('<div>');
 			divElCard.attr('class', 'card text-white bg-primary mb-3 cardOne');
 			divElCard.attr('style', 'max-width: 200px;');
-			fiveForecastEl.append(divElCard);
+			forcastVal.append(divElCard);
 
 			var divElHeader = $('<div>');
 			divElHeader.attr('class', 'card-header')
