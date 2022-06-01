@@ -32,14 +32,68 @@ function getHis() {
 		getWeath();
 	});
 };
+//
+var cardBody = $('.bodToday')
 //to do: get weather data for today and put it in today card
 function getWeath(){
+    var curURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${key}`;
+	$(cardBody).empty();
+	$.ajax({
+		url: curURL,
+		method: 'GET',
+	}).then(function (response) {
+		$('.cityName').text(response.name);
+		$('.currDate').text(date);
+		//icons
+		$('.icons').attr('src', `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`);
+		//temperature
+		var pEl = $('<p>').text(`Temperature: ${response.main.temp} °F`);
+		cardBody.append(pEl);
+		//what it actually feels like
+		var pElTemp = $('<p>').text(`Feels Like: ${response.main.feels_like} °F`);
+		cardBody.append(pElTemp);
+		//humidity
+		var pElHumid = $('<p>').text(`Humidity: ${response.main.humidity} %`);
+		cardBody.append(pElHumid);
+		//wind
+		var pElWind = $('<p>').text(`Wind Speed: ${response.wind.speed} MPH`);
+		cardBody.append(pElWind);
+		//latitude and longitude of city
+		var cityLon = response.coord.lon;
+		var cityLat = response.coord.lat;
 
+
+		var getUrlUvi = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityLat}&lon=${cityLon}&exclude=hourly,daily,minutely&appid=${key}`;
+
+		$.ajax({
+			url: getUrlUvi,
+			method: 'GET',
+		}).then(function (response) {
+			var uviElement = $('<p>').text(`UV Index: `);
+			var uviSpan = $('<span>').text(response.current.uvi);
+			var uvi = response.current.uvi;
+			uviElement.append(uviSpan);
+			cardBody.append(uviElement);
+			//uv index based on color between moderate and severe
+			if (uvi >= 0 && uvi <= 2) {
+				uviSpan.attr('class', 'green');
+			} else if (uvi > 2 && uvi <= 5) {
+				uviSpan.attr("class", "yellow")
+			} else if (uvi > 5 && uvi <= 7) {
+				uviSpan.attr("class", "orange")
+			} else if (uvi > 7 && uvi <= 10) {
+				uviSpan.attr("class", "red")
+			} else {
+				uviSpan.attr("class", "purple")
+			}
+		});
+	});
+	forecast();
 }
 //to do: get forecast for the week
 var forcastVal = $('forecast');
 function forecast(){
-
+    
 }
 
 //to do: save text as array on search click
